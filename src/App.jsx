@@ -3,10 +3,7 @@ import {CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAx
 
 const RabbitPopulationCalculator = () => {
     const [parameters, setParameters] = useState({
-        initialRabbits: 2,
-        growthRate: 3.8,
-        carryingCapacity: 1000,
-        years: 50
+        initialRabbits: 2, growthRate: 3.8, carryingCapacity: 1000, years: 50
     });
 
     const [populationData, setPopulationData] = useState([]);
@@ -23,8 +20,7 @@ const RabbitPopulationCalculator = () => {
             currentPopulation = Math.max(0, currentPopulation);
 
             data.push({
-                year: year,
-                population: Math.round(currentPopulation * 100) / 100
+                year: year, population: Math.round(currentPopulation * 100) / 100
             });
         }
 
@@ -33,10 +29,7 @@ const RabbitPopulationCalculator = () => {
 
     const resetParameters = () => {
         setParameters({
-            initialRabbits: 2,
-            growthRate: 3.8,
-            carryingCapacity: 1000,
-            years: 50
+            initialRabbits: 2, growthRate: 3.8, carryingCapacity: 1000, years: 50
         });
         setPopulationData([]);
     };
@@ -65,8 +58,7 @@ const RabbitPopulationCalculator = () => {
 
     const updateParameter = (key, value) => {
         setParameters(prev => ({
-            ...prev,
-            [key]: parseFloat(value) || parseInt(value) || 0
+            ...prev, [key]: parseFloat(value) || parseInt(value) || 0
         }));
     };
 
@@ -76,26 +68,26 @@ const RabbitPopulationCalculator = () => {
 
     const CustomTooltip = ({active, payload, label}) => {
         if (active && payload && payload.length) {
-            return (
-                <div className="bg-gray-800 text-gray-200 p-3 border border-gray-600">
+            return (<div className="bg-gray-800 text-gray-200 p-3 border border-gray-600">
                     <p className="font-medium">{`Year ${label}`}</p>
                     <p className="text-blue-400">
                         {`Population: ${Math.round(payload[0].value).toLocaleString()}`}
                     </p>
-                </div>
-            );
+                </div>);
         }
         return null;
     };
 
-    return (
-        <div className="min-h-screen bg-gray-900 text-gray-200">
+    return (<div className="min-h-screen bg-gray-900 text-gray-200">
             <div className="container mx-auto px-4 py-8 max-w-6xl">
                 {/* Header */}
                 <div className="mb-12">
-                    <h1 className="text-3xl font-bold text-white mb-3">
-                        Rabbit Population Calculator
-                    </h1>
+                    <a href="https://github.com/NuclearMissile/logistic-react" rel="noreferrer noopener" target="_blank">
+                        <h1 className="text-3xl font-bold text-white mb-3">
+                            Rabbit Population Calculator
+                        </h1>
+                    </a>
+
                     <p className="text-gray-400 text-lg">
                         Simulate rabbit population growth dynamics using logistic growth model
                     </p>
@@ -228,8 +220,7 @@ const RabbitPopulationCalculator = () => {
                     </div>
                 </div>}
             </div>
-        </div>
-    );
+        </div>);
 };
 
 export default RabbitPopulationCalculator;
