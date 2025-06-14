@@ -1,6 +1,5 @@
 import {useCallback, useEffect, useState} from 'react';
 import {CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis} from 'recharts';
-import {Download, RotateCcw} from 'lucide-react';
 
 const RabbitPopulationCalculator = () => {
     const [parameters, setParameters] = useState({
@@ -35,7 +34,7 @@ const RabbitPopulationCalculator = () => {
     const resetParameters = () => {
         setParameters({
             initialRabbits: 2,
-            growthRate: 2.5,
+            growthRate: 3.8,
             carryingCapacity: 1000,
             years: 50
         });
@@ -184,7 +183,6 @@ const RabbitPopulationCalculator = () => {
                             onClick={resetParameters}
                             className="flex items-center gap-2 px-6 py-3 bg-gray-600 text-white font-medium hover:bg-gray-700 transition-colors"
                         >
-                            <RotateCcw className="w-4 h-4"/>
                             Reset
                         </button>
 
@@ -192,7 +190,6 @@ const RabbitPopulationCalculator = () => {
                             onClick={exportData}
                             className="flex items-center gap-2 px-6 py-3 bg-green-600 text-white font-medium hover:bg-green-700 transition-colors"
                         >
-                            <Download className="w-4 h-4"/>
                             Export CSV
                         </button>
                     </div>
