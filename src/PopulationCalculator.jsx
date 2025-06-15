@@ -69,20 +69,22 @@ const PopulationCalculator = () => {
     const CustomTooltip = ({active, payload, label}) => {
         if (active && payload && payload.length) {
             return (<div className="bg-gray-800 text-gray-200 p-3 border border-gray-600">
-                    <p className="font-medium">{`Year ${label}`}</p>
-                    <p className="text-blue-400">
-                        {`Population: ${Math.round(payload[0].value).toLocaleString()}`}
-                    </p>
-                </div>);
+                <p className="font-medium">{`Year ${label}`}</p>
+                <p className="text-blue-400">
+                    {`Population: ${Math.round(payload[0].value).toLocaleString()}`}
+                </p>
+            </div>);
         }
         return null;
     };
 
-    return (<div className="min-h-screen bg-gray-900 text-gray-200">
+    return (
+        <div className="min-h-screen bg-gray-900 text-gray-200">
             <div className="container mx-auto px-4 py-8 max-w-7xl">
                 {/* Header */}
                 <div className="mb-8">
-                    <a href="https://github.com/NuclearMissile/logistic-react" rel="noreferrer noopener" target="_blank">
+                    <a href="https://github.com/NuclearMissile/logistic-react" rel="noreferrer noopener"
+                       target="_blank">
                         <h1 className="text-3xl font-bold text-white mb-3">
                             Population Calculator
                         </h1>
@@ -210,14 +212,16 @@ const PopulationCalculator = () => {
                     </div>
 
                     <div className="mt-4 text-xs text-gray-500">
-                        <p>• Next Population = Growth Rate × Current Population × (1 - Current Population / Carrying Capacity)</p>
+                        <p>• Next Population = Growth Rate × Current Population × (1 - Current Population / Carrying
+                            Capacity)</p>
                         <p>• The chart shows population changes over time based on the logistic growth model</p>
                         <p>• Different growth rates can lead to stable, oscillating, or chaotic population dynamics</p>
                         <p>• Hover over points to see exact population values for each year</p>
                     </div>
                 </div>}
             </div>
-        </div>);
+        </div>
+    );
 };
 
 export default PopulationCalculator;
