@@ -39,6 +39,7 @@ const LorenzAttractor = () => {
         const renderer = new THREE.WebGLRenderer({antialias: true});
         renderer.setSize(mountRef.current.clientWidth, mountRef.current.clientHeight);
         renderer.setPixelRatio(window.devicePixelRatio);
+        mountRef.current.innerHTML = '';
         mountRef.current.appendChild(renderer.domElement);
 
         // Add ambient light
@@ -349,7 +350,7 @@ const LorenzAttractor = () => {
                         Drag to rotate | Scroll to zoom
                     </div>
 
-                    <div className="h-190 w-full border border-gray-700"
+                    <div className="h-180 w-full border border-gray-700"
                          ref={mountRef}
                          style={{cursor: 'grab'}}/>
 
