@@ -1,17 +1,17 @@
 import {useCallback, useEffect, useState} from 'react';
 import {CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis} from 'recharts';
 
-const RabbitPopulationCalculator = () => {
+const PopulationCalculator = () => {
     const [parameters, setParameters] = useState({
-        initialRabbits: 2, growthRate: 3.8, carryingCapacity: 1000, years: 50
+        initialPopulation: 2, growthRate: 3.8, carryingCapacity: 1000, years: 50
     });
 
     const [populationData, setPopulationData] = useState([]);
 
     const calculatePopulation = useCallback(() => {
-        const {initialRabbits, growthRate, carryingCapacity, years} = parameters;
+        const {initialPopulation, growthRate, carryingCapacity, years} = parameters;
         const data = [];
-        let currentPopulation = initialRabbits;
+        let currentPopulation = initialPopulation;
         data.push({year: 0, population: currentPopulation});
 
         for (let year = 1; year <= years; year++) {
@@ -29,7 +29,7 @@ const RabbitPopulationCalculator = () => {
 
     const resetParameters = () => {
         setParameters({
-            initialRabbits: 2, growthRate: 3.8, carryingCapacity: 1000, years: 50
+            initialPopulation: 2, growthRate: 3.8, carryingCapacity: 1000, years: 50
         });
         setPopulationData([]);
     };
@@ -49,7 +49,7 @@ const RabbitPopulationCalculator = () => {
         const link = document.createElement("a");
         const url = URL.createObjectURL(blob);
         link.setAttribute("href", url);
-        link.setAttribute("download", "rabbit_population_data.csv");
+        link.setAttribute("download", "population_data.csv");
         link.style.visibility = 'hidden';
         document.body.appendChild(link);
         link.click();
@@ -79,17 +79,17 @@ const RabbitPopulationCalculator = () => {
     };
 
     return (<div className="min-h-screen bg-gray-900 text-gray-200">
-            <div className="container mx-auto px-4 py-8 max-w-6xl">
+            <div className="container mx-auto px-4 py-8 max-w-7xl">
                 {/* Header */}
                 <div className="mb-12">
                     <a href="https://github.com/NuclearMissile/logistic-react" rel="noreferrer noopener" target="_blank">
                         <h1 className="text-3xl font-bold text-white mb-3">
-                            Rabbit Population Calculator
+                            Population Calculator
                         </h1>
                     </a>
 
                     <p className="text-gray-400 text-lg">
-                        Simulate rabbit population growth dynamics using logistic growth model
+                        Simulate population growth dynamics using logistic growth model
                     </p>
                 </div>
 
@@ -106,15 +106,15 @@ const RabbitPopulationCalculator = () => {
                 {/* Controls Card */}
                 <div className="bg-gray-800 border border-gray-700 p-8 mb-8">
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-8">
-                        {/* Initial Rabbits */}
+                        {/* Initial Population */}
                         <div className="space-y-3">
                             <label className="block text-gray-200 font-medium">
-                                Initial Rabbits
+                                Initial Population
                             </label>
                             <input
                                 type="number"
-                                value={parameters.initialRabbits}
-                                onChange={(e) => updateParameter('initialRabbits', e.target.value)}
+                                value={parameters.initialPopulation}
+                                onChange={(e) => updateParameter('initialPopulation', e.target.value)}
                                 className="w-full p-3 bg-gray-700 border border-gray-600 text-gray-200 focus:border-blue-500 focus:outline-none"
                                 min="1"
                                 max="1000"
@@ -223,4 +223,4 @@ const RabbitPopulationCalculator = () => {
         </div>);
 };
 
-export default RabbitPopulationCalculator;
+export default PopulationCalculator;
