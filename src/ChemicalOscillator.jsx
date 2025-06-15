@@ -259,13 +259,12 @@ const ChemicalOscillator = () => {
     return (
         <div className="min-h-screen bg-gray-900 text-gray-200">
             <div className="container mx-auto px-4 py-8 max-w-7xl">
-                <h1 className="text-4xl font-bold text-center text-blue-400 mb-8 drop-shadow-lg">
+                <h1 className="text-4xl font-bold text-center mb-8 drop-shadow-lg">
                     Chemical Oscillator
                 </h1>
 
                 <div className="flex items-center justify-center gap-6 mb-8 flex-wrap">
-                    <div
-                        className="flex items-center gap-4 bg-gray-600/60 p-4 rounded-xl border border-blue-400/20">
+                    <div className="flex items-center gap-4 bg-gray-800 p-4 border border-gray-700">
                         <label className="font-bold text-gray-300 min-w-20">B Concentration:</label>
                         <input
                             type="range"
@@ -276,25 +275,25 @@ const ChemicalOscillator = () => {
                             onChange={(e) => setB(parseFloat(e.target.value))}
                             className="w-48 h-2 bg-gray-600 rounded-lg appearance-none cursor-pointer"
                             style={{
-                                background: `linear-gradient(to right, #4a9eff 0%, #4a9eff ${(B / 5) * 100}%, #444 ${(B / 5) * 100}%, #444 100%)`
+                                background: `linear-gradient(to right, #fff 0%, #fff ${(B / 5) * 100}%, #444 ${(B / 5) * 100}%, #444 100%)`
                             }}
                         />
                         <span
-                            className="bg-blue-400/20 text-blue-400 px-4 py-2 rounded-lg font-mono font-bold border border-blue-400/30">
+                            className="bg-gray-700 px-4 py-2 font-mono font-bold border border-gray-700">
               {B.toFixed(1)}
             </span>
                     </div>
 
                     <button
                         onClick={resetSimulation}
-                        className="bg-blue-500 text-white px-6 py-3 rounded-lg font-bold shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all duration-300"
+                        className="flex items-center gap-2 px-6 py-3 bg-gray-600 text-white font-medium hover:bg-gray-700 transition-colors"
                     >
                         Reset
                     </button>
 
                     <button
                         onClick={togglePause}
-                        className="bg-blue-500 text-white px-6 py-3 rounded-lg font-bold shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all duration-300"
+                        className="flex items-center gap-2 px-6 py-3 bg-gray-600 text-white font-medium hover:bg-gray-700 transition-colors"
                     >
                         {isPaused ? 'Resume' : 'Pause'}
                     </button>
