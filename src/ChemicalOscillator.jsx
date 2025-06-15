@@ -2,7 +2,14 @@ import React, {useCallback, useEffect, useRef, useState} from 'react';
 
 const ChemicalOscillator = () => {
     // State management
-    const [B, setB] = useState(5.0);
+    const [parameters, setParameters] = useState({
+        B: 5.5,
+        A: 2.0,
+        k1: 1.0,
+        k2: 1.0,
+        k3: 1.0,
+        k4: 1.0
+    });
     const [isPaused, setIsPaused] = useState(false);
     const [status, setStatus] = useState('');
 
@@ -12,7 +19,6 @@ const ChemicalOscillator = () => {
 
     // System state refs
     const systemStateRef = useRef({
-        A: 2.0,
         X: 1.0,
         Y: 1.0,
         time: 0,
@@ -22,23 +28,23 @@ const ChemicalOscillator = () => {
     });
 
     // Constants
-    const k1 = 1.0, k2 = 1.0, k3 = 1.0, k4 = 1.0;
     const dt = 0.01;
     const maxPoints = 1000;
 
     // Differential equations
-    const derivatives = useCallback((x, y, b) => {
-        const dxdt = k1 * systemStateRef.current.A - k2 * b * x + k3 * x * x * y - k4 * x;
-        const dydt = k2 * b * x - k3 * x * x * y;
+    const derivatives = useCallback((x, y, params) => {
+        const {A, B, k1, k2, k3, k4} = params;
+        const dxdt = k1 * A - k2 * B * x + k3 * x * x * y - k4 * x;
+        const dydt = k2 * B * x - k3 * x * x * y;
         return [dxdt, dydt];
     }, []);
 
     // Runge-Kutta integration
-    const rungeKutta = useCallback((x, y, dt, b) => {
-        const [k1x, k1y] = derivatives(x, y, b);
-        const [k2x, k2y] = derivatives(x + 0.5 * dt * k1x, y + 0.5 * dt * k1y, b);
-        const [k3x, k3y] = derivatives(x + 0.5 * dt * k2x, y + 0.5 * dt * k2y, b);
-        const [k4x, k4y] = derivatives(x + dt * k3x, y + dt * k3y, b);
+    const rungeKutta = useCallback((x, y, dt, params) => {
+        const [k1x, k1y] = derivatives(x, y, params);
+        const [k2x, k2y] = derivatives(x + 0.5 * dt * k1x, y + 0.5 * dt * k1y, params);
+        const [k3x, k3y] = derivatives(x + 0.5 * dt * k2x, y + 0.5 * dt * k2y, params);
+        const [k4x, k4y] = derivatives(x + dt * k3x, y + dt * k3y, params);
 
         const newX = x + (dt / 6) * (k1x + 2 * k2x + 2 * k3x + k4x);
         const newY = y + (dt / 6) * (k1y + 2 * k2y + 2 * k3y + k4y);
@@ -51,7 +57,7 @@ const ChemicalOscillator = () => {
         if (isPaused) return;
 
         const state = systemStateRef.current;
-        [state.X, state.Y] = rungeKutta(state.X, state.Y, dt, B);
+        [state.X, state.Y] = rungeKutta(state.X, state.Y, dt, parameters);
         state.time += dt;
 
         // Store trajectory points
@@ -65,7 +71,7 @@ const ChemicalOscillator = () => {
         if (state.timePoints.length > maxPoints) {
             state.timePoints.shift();
         }
-    }, [isPaused, B, rungeKutta]);
+    }, [isPaused, parameters, rungeKutta]);
 
     // Draw phase diagram
     const drawPhase = useCallback(() => {
@@ -135,8 +141,8 @@ const ChemicalOscillator = () => {
         }
 
         // Draw axis labels
-        ctx.fillStyle = '#4a9eff';
-        ctx.font = '14px Arial';
+        ctx.fillStyle = '#9CA3AF';
+        ctx.font = '12px';
         ctx.fillText('X', canvas.width - 20, canvas.height - 10);
         ctx.fillText('Y', 10, 20);
     }, []);
@@ -201,11 +207,11 @@ const ChemicalOscillator = () => {
 
         // Draw legend
         ctx.fillStyle = '#ff6b6b';
-        ctx.font = '14px Arial';
+        ctx.font = '12px';
         ctx.fillText('X', 20, 30);
         ctx.fillStyle = '#4ecdc4';
         ctx.fillText('Y', 20, 50);
-        ctx.fillStyle = '#4a9eff';
+        ctx.fillStyle = '#9CA3AF';
         ctx.fillText('Time', canvas.width - 40, canvas.height - 10);
     }, []);
 
@@ -218,11 +224,11 @@ const ChemicalOscillator = () => {
         drawTimeSeries();
 
         // Update status
-        const statusText = `B = ${B.toFixed(1)}, X = ${state.X.toFixed(2)}, Y = ${state.Y.toFixed(2)}, t = ${state.time.toFixed(1)}`;
+        const statusText = `B = ${parameters.B.toFixed(1)}, X = ${state.X.toFixed(2)}, Y = ${state.Y.toFixed(2)}, t = ${state.time.toFixed(1)}`;
         setStatus(statusText);
 
         state.animationId = requestAnimationFrame(animate);
-    }, [updateSystem, drawPhase, drawTimeSeries, B]);
+    }, [updateSystem, drawPhase, drawTimeSeries, parameters.B]);
 
     // Reset simulation
     const resetSimulation = useCallback(() => {
@@ -234,10 +240,30 @@ const ChemicalOscillator = () => {
         state.timePoints = [];
     }, []);
 
+    // Reset parameters
+    const resetParameters = () => {
+        setParameters({
+            B: 5.0,
+            A: 2.0,
+            k1: 1.0,
+            k2: 1.0,
+            k3: 1.0,
+            k4: 1.0
+        });
+        resetSimulation();
+    };
+
     // Toggle pause
     const togglePause = useCallback(() => {
         setIsPaused(prev => !prev);
     }, []);
+
+    const updateParameter = (key, value) => {
+        setParameters(prev => ({
+            ...prev,
+            [key]: parseFloat(value) || 0
+        }));
+    };
 
     // Effect to start/stop animation
     useEffect(() => {
@@ -259,94 +285,191 @@ const ChemicalOscillator = () => {
     return (
         <div className="min-h-screen bg-gray-900 text-gray-200">
             <div className="container mx-auto px-4 py-8 max-w-7xl">
-                <h1 className="text-4xl font-bold text-center mb-8 drop-shadow-lg">
-                    Chemical Oscillator
-                </h1>
-
-                <div className="flex items-center justify-center gap-6 mb-8 flex-wrap">
-                    <div className="flex items-center gap-4 bg-gray-800 p-4 border border-gray-700">
-                        <label className="font-bold">B:</label>
-                        <input
-                            type="range"
-                            min="0"
-                            max="6"
-                            step="0.1"
-                            value={B}
-                            onChange={(e) => setB(parseFloat(e.target.value))}
-                            className="w-48 h-2 bg-gray-600 rounded-lg appearance-none cursor-pointer"
-                            style={{
-                                background: `linear-gradient(to right, #fff 0%, #fff ${(B / 6) * 100}%, #444 ${(B / 6) * 100}%, #444 100%)`
-                            }}
-                        />
-                        <span
-                            className="bg-gray-700 px-4 py-2 font-mono font-bold border border-gray-700">
-              {B.toFixed(1)}
-            </span>
-                    </div>
-
-                    <button
-                        onClick={resetSimulation}
-                        className="flex items-center gap-2 px-6 py-3 bg-gray-800 font-medium hover:bg-gray-700 transition-colors"
-                    >
-                        Reset
-                    </button>
-
-                    <button
-                        onClick={togglePause}
-                        className="flex items-center gap-2 px-6 py-3 bg-gray-800 font-medium hover:bg-gray-700 transition-colors"
-                    >
-                        {isPaused ? 'Resume' : 'Pause'}
-                    </button>
+                {/* Header */}
+                <div className="mb-8">
+                    <h1 className="text-3xl font-bold text-white mb-3">
+                        Brusselator Simulation
+                    </h1>
+                    <p className="text-gray-400 text-lg">
+                        Visualize the Brusselator chemical reaction dynamics in phase space and time series
+                    </p>
                 </div>
 
-                <div className="flex justify-center gap-8 flex-wrap">
-                    <div className="bg-gray-900/80 p-5 border border-blue-400/20 shadow-xl">
-                        <div className="text-center mb-4 text-xl font-bold">
-                            X vs Y
+                {/* Controls */}
+                <div className="bg-gray-800 border border-gray-700 p-6 mb-8">
+                    <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-6">
+                        <div className="space-y-2">
+                            <label className="block text-gray-200 font-medium text-sm">
+                                Parameter B
+                            </label>
+                            <input
+                                type="number"
+                                step="0.1"
+                                min="0"
+                                max="10"
+                                value={parameters.B}
+                                onChange={(e) => updateParameter('B', e.target.value)}
+                                className="w-full p-2 bg-gray-700 border border-gray-600 text-gray-200 text-sm focus:border-blue-500 focus:outline-none"
+                            />
+                        </div>
+
+                        <div className="space-y-2">
+                            <label className="block text-gray-200 font-medium text-sm">
+                                Parameter A
+                            </label>
+                            <input
+                                type="number"
+                                step="0.1"
+                                min="0.1"
+                                max="5"
+                                value={parameters.A}
+                                onChange={(e) => updateParameter('A', e.target.value)}
+                                className="w-full p-2 bg-gray-700 border border-gray-600 text-gray-200 text-sm focus:border-blue-500 focus:outline-none"
+                            />
+                        </div>
+
+                        <div className="space-y-2">
+                            <label className="block text-gray-200 font-medium text-sm">
+                                Rate k₁
+                            </label>
+                            <input
+                                type="number"
+                                step="0.1"
+                                min="0.1"
+                                max="3"
+                                value={parameters.k1}
+                                onChange={(e) => updateParameter('k1', e.target.value)}
+                                className="w-full p-2 bg-gray-700 border border-gray-600 text-gray-200 text-sm focus:border-blue-500 focus:outline-none"
+                            />
+                        </div>
+
+                        <div className="space-y-2">
+                            <label className="block text-gray-200 font-medium text-sm">
+                                Rate k₂
+                            </label>
+                            <input
+                                type="number"
+                                step="0.1"
+                                min="0.1"
+                                max="3"
+                                value={parameters.k2}
+                                onChange={(e) => updateParameter('k2', e.target.value)}
+                                className="w-full p-2 bg-gray-700 border border-gray-600 text-gray-200 text-sm focus:border-blue-500 focus:outline-none"
+                            />
+                        </div>
+
+                        <div className="space-y-2">
+                            <label className="block text-gray-200 font-medium text-sm">
+                                Rate k₃
+                            </label>
+                            <input
+                                type="number"
+                                step="0.1"
+                                min="0.1"
+                                max="3"
+                                value={parameters.k3}
+                                onChange={(e) => updateParameter('k3', e.target.value)}
+                                className="w-full p-2 bg-gray-700 border border-gray-600 text-gray-200 text-sm focus:border-blue-500 focus:outline-none"
+                            />
+                        </div>
+
+                        <div className="space-y-2">
+                            <label className="block text-gray-200 font-medium text-sm">
+                                Rate k₄
+                            </label>
+                            <input
+                                type="number"
+                                step="0.1"
+                                min="0.1"
+                                max="3"
+                                value={parameters.k4}
+                                onChange={(e) => updateParameter('k4', e.target.value)}
+                                className="w-full p-2 bg-gray-700 border border-gray-600 text-gray-200 text-sm focus:border-blue-500 focus:outline-none"
+                            />
+                        </div>
+                    </div>
+
+                    <div className="flex gap-4">
+                        <button
+                            onClick={resetParameters}
+                            className="px-4 py-2 bg-gray-600 text-white font-medium hover:bg-gray-700 transition-colors text-sm"
+                        >
+                            Reset Parameters
+                        </button>
+                        <button
+                            onClick={resetSimulation}
+                            className="px-4 py-2 bg-gray-600 text-white font-medium hover:bg-gray-700 transition-colors text-sm"
+                        >
+                            Reset Simulation
+                        </button>
+                        <button
+                            onClick={togglePause}
+                            className="px-4 py-2 bg-blue-600 text-white font-medium hover:bg-blue-700 transition-colors text-sm"
+                        >
+                            {isPaused ? 'Resume' : 'Pause'}
+                        </button>
+                        <div className="text-sm text-gray-400 flex items-center">
+                            {status}
+                        </div>
+                    </div>
+                </div>
+
+                {/* Visualization Panels */}
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+                    <div className="bg-gray-800 border border-gray-700 p-6">
+                        <h3 className="text-xl font-bold text-white mb-4">
+                            Phase Portrait (X vs Y)
+                        </h3>
+                        <div className="text-sm text-gray-400 mb-4">
+                            Trajectory in concentration phase space
                         </div>
                         <canvas
                             ref={phaseCanvasRef}
                             width="400"
-                            height="400"
-                            className="border-2 border-gray-600 bg-gray-900"
+                            height="300"
+                            className="w-full border border-gray-600 bg-gray-900"
                         />
                     </div>
 
-                    <div className="bg-gray-900/80 p-5 border border-blue-400/20 shadow-xl">
-                        <div className="text-center mb-4 text-xl font-bold">
+                    <div className="bg-gray-800 border border-gray-700 p-6">
+                        <h3 className="text-xl font-bold text-white mb-4">
                             Time Series
+                        </h3>
+                        <div className="text-sm text-gray-400 mb-4">
+                            Concentration oscillations over time
                         </div>
                         <canvas
                             ref={timeCanvasRef}
                             width="400"
-                            height="400"
-                            className="border-2 border-gray-600 bg-gray-900"
+                            height="300"
+                            className="w-full border border-gray-600 bg-gray-900"
                         />
                     </div>
                 </div>
 
-                <div className="mt-6 bg-gray-600/40 p-5 border border-gray-400/20">
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
-                        <div
-                            className="bg-gray-700 p-3 text-center font-mono">
+                {/* Chemical Reactions Panel */}
+                <div className="bg-gray-800 border border-gray-700 p-6">
+                    <h3 className="text-xl font-bold text-white mb-4">
+                        Brusselator Reaction Scheme
+                    </h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                        <div className="bg-gray-700 p-3 text-center font-mono text-sm">
                             A → X
                         </div>
-                        <div
-                            className="bg-gray-700 p-3 text-center font-mono">
+                        <div className="bg-gray-700 p-3 text-center font-mono text-sm">
                             B + X → Y + D
                         </div>
-                        <div
-                            className="bg-gray-700 p-3 text-center font-mono">
+                        <div className="bg-gray-700 p-3 text-center font-mono text-sm">
                             2X + Y → 3X
                         </div>
-                        <div
-                            className="bg-gray-700 p-3 text-center font-mono">
+                        <div className="bg-gray-700 p-3 text-center font-mono text-sm">
                             X → E
                         </div>
                     </div>
-                    <div
-                        className="text-center p-3 bg-gray-700 font-bold">
-                        {status}
+                    <div className="mt-4 text-xs text-gray-500">
+                        <p>• The Brusselator is a theoretical model for autocatalytic chemical reactions</p>
+                        <p>• Parameter B controls the oscillation behavior - try values around 5-6 for limit cycles</p>
+                        <p>• The phase portrait shows the system's trajectory in X-Y concentration space</p>
                     </div>
                 </div>
             </div>

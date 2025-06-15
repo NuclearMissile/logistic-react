@@ -81,7 +81,7 @@ const PopulationCalculator = () => {
     return (<div className="min-h-screen bg-gray-900 text-gray-200">
             <div className="container mx-auto px-4 py-8 max-w-7xl">
                 {/* Header */}
-                <div className="mb-12">
+                <div className="mb-8">
                     <a href="https://github.com/NuclearMissile/logistic-react" rel="noreferrer noopener" target="_blank">
                         <h1 className="text-3xl font-bold text-white mb-3">
                             Population Calculator
@@ -93,68 +93,58 @@ const PopulationCalculator = () => {
                     </p>
                 </div>
 
-                {/* Formula Card */}
-                <div className="bg-gray-800 border border-gray-700 p-6 mb-8">
-                    <div className="text-center text-gray-200">
-                        <div className="text-base font-mono">
-                            Next Population = Growth Rate × Current Population × (1 - Current Population / Carrying
-                            Capacity)
-                        </div>
-                    </div>
-                </div>
-
                 {/* Controls Card */}
-                <div className="bg-gray-800 border border-gray-700 p-8 mb-8">
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-8">
+                <div className="bg-gray-800 border border-gray-700 p-6 mb-8">
+                    <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-6">
                         {/* Initial Population */}
-                        <div className="space-y-3">
-                            <label className="block text-gray-200 font-medium">
+                        <div className="space-y-2">
+                            <label className="block text-gray-200 font-medium text-sm">
                                 Initial Population
                             </label>
                             <input
                                 type="number"
                                 value={parameters.initialPopulation}
                                 onChange={(e) => updateParameter('initialPopulation', e.target.value)}
-                                className="w-full p-3 bg-gray-700 border border-gray-600 text-gray-200 focus:border-blue-500 focus:outline-none"
+                                className="w-full p-2 bg-gray-700 border border-gray-600 text-gray-200 text-sm focus:border-blue-500 focus:outline-none"
                                 min="1"
                                 max="1000"
                             />
                         </div>
 
                         {/* Growth Rate */}
-                        <div className="space-y-3">
-                            <label className="block text-gray-200 font-medium">
+                        <div className="space-y-2">
+                            <label className="block text-gray-200 font-medium text-sm">
                                 Growth Rate
                             </label>
                             <input
                                 type="number"
                                 min="0.1"
                                 max="4.0"
-                                step="0.005"
+                                step="0.1"
                                 value={parameters.growthRate}
                                 onChange={(e) => updateParameter('growthRate', e.target.value)}
-                                className="w-full p-3 bg-gray-700 border border-gray-600 text-gray-200 focus:border-blue-500 focus:outline-none"
+                                className="w-full p-2 bg-gray-700 border border-gray-600 text-gray-200 text-sm focus:border-blue-500 focus:outline-none"
                             />
                         </div>
 
                         {/* Carrying Capacity */}
-                        <div className="space-y-3">
-                            <label className="block text-gray-200 font-medium">
+                        <div className="space-y-2">
+                            <label className="block text-gray-200 font-medium text-sm">
                                 Carrying Capacity
                             </label>
                             <input
                                 type="number"
                                 value={parameters.carryingCapacity}
                                 onChange={(e) => updateParameter('carryingCapacity', e.target.value)}
-                                className="w-full p-3 bg-gray-700 border border-gray-600 text-gray-200 focus:border-blue-500 focus:outline-none"
-                                min="10"
+                                className="w-full p-2 bg-gray-700 border border-gray-600 text-gray-200 text-sm focus:border-blue-500 focus:outline-none"
+                                min="100"
                                 max="10000"
                             />
                         </div>
 
                         {/* Years */}
-                        <div className="space-y-3">
-                            <label className="block text-gray-200 font-medium">
+                        <div className="space-y-2">
+                            <label className="block text-gray-200 font-medium text-sm">
                                 Simulation Years
                             </label>
                             <input
@@ -164,23 +154,23 @@ const PopulationCalculator = () => {
                                 step="1"
                                 value={parameters.years}
                                 onChange={(e) => updateParameter('years', e.target.value)}
-                                className="w-full p-3 bg-gray-700 border border-gray-600 text-gray-200 focus:border-blue-500 focus:outline-none"
+                                className="w-full p-2 bg-gray-700 border border-gray-600 text-gray-200 text-sm focus:border-blue-500 focus:outline-none"
                             />
                         </div>
                     </div>
 
                     {/* Action Buttons */}
-                    <div className="flex flex-wrap gap-4 justify-center">
+                    <div className="flex gap-4">
                         <button
                             onClick={resetParameters}
-                            className="flex items-center gap-2 px-6 py-3 bg-gray-600 text-white font-medium hover:bg-gray-700 transition-colors"
+                            className="px-4 py-2 bg-gray-600 text-white font-medium hover:bg-gray-700 transition-colors text-sm"
                         >
-                            Reset
+                            Reset Parameters
                         </button>
 
                         <button
                             onClick={exportData}
-                            className="flex items-center gap-2 px-6 py-3 bg-green-600 text-white font-medium hover:bg-green-700 transition-colors"
+                            className="px-4 py-2 bg-green-600 text-white font-medium hover:bg-green-700 transition-colors text-sm"
                         >
                             Export CSV
                         </button>
@@ -188,8 +178,8 @@ const PopulationCalculator = () => {
                 </div>
 
                 {/* Results */}
-                {<div className="bg-gray-800 border border-gray-700 p-8">
-                    <h3 className="text-xl font-bold text-white mb-6">
+                {<div className="bg-gray-800 border border-gray-700 p-6">
+                    <h3 className="text-xl font-bold text-white mb-4">
                         Population Growth Trend
                     </h3>
                     <div className="h-96">
@@ -217,6 +207,13 @@ const PopulationCalculator = () => {
                                 />
                             </LineChart>
                         </ResponsiveContainer>
+                    </div>
+
+                    <div className="mt-4 text-xs text-gray-500">
+                        <p>• Next Population = Growth Rate × Current Population × (1 - Current Population / Carrying Capacity)</p>
+                        <p>• The chart shows population changes over time based on the logistic growth model</p>
+                        <p>• Different growth rates can lead to stable, oscillating, or chaotic population dynamics</p>
+                        <p>• Hover over points to see exact population values for each year</p>
                     </div>
                 </div>}
             </div>
