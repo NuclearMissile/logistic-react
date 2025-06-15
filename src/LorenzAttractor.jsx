@@ -349,7 +349,7 @@ const LorenzAttractor = () => {
                         Drag to rotate | Scroll to zoom
                     </div>
 
-                    <div className="h-190 w-full"
+                    <div className="h-190 w-full border border-gray-700"
                          ref={mountRef}
                          style={{cursor: 'grab'}}/>
 
