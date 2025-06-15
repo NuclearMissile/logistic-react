@@ -265,17 +265,17 @@ const ChemicalOscillator = () => {
 
                 <div className="flex items-center justify-center gap-6 mb-8 flex-wrap">
                     <div className="flex items-center gap-4 bg-gray-800 p-4 border border-gray-700">
-                        <label className="font-bold text-gray-300 min-w-20">B Concentration:</label>
+                        <label className="font-bold">B:</label>
                         <input
                             type="range"
                             min="0"
-                            max="5"
+                            max="6"
                             step="0.1"
                             value={B}
                             onChange={(e) => setB(parseFloat(e.target.value))}
                             className="w-48 h-2 bg-gray-600 rounded-lg appearance-none cursor-pointer"
                             style={{
-                                background: `linear-gradient(to right, #fff 0%, #fff ${(B / 5) * 100}%, #444 ${(B / 5) * 100}%, #444 100%)`
+                                background: `linear-gradient(to right, #fff 0%, #fff ${(B / 6) * 100}%, #444 ${(B / 6) * 100}%, #444 100%)`
                             }}
                         />
                         <span
@@ -286,67 +286,67 @@ const ChemicalOscillator = () => {
 
                     <button
                         onClick={resetSimulation}
-                        className="flex items-center gap-2 px-6 py-3 bg-gray-600 text-white font-medium hover:bg-gray-700 transition-colors"
+                        className="flex items-center gap-2 px-6 py-3 bg-gray-800 font-medium hover:bg-gray-700 transition-colors"
                     >
                         Reset
                     </button>
 
                     <button
                         onClick={togglePause}
-                        className="flex items-center gap-2 px-6 py-3 bg-gray-600 text-white font-medium hover:bg-gray-700 transition-colors"
+                        className="flex items-center gap-2 px-6 py-3 bg-gray-800 font-medium hover:bg-gray-700 transition-colors"
                     >
                         {isPaused ? 'Resume' : 'Pause'}
                     </button>
                 </div>
 
                 <div className="flex justify-center gap-8 flex-wrap">
-                    <div className="bg-gray-900/80 rounded-xl p-5 border border-blue-400/20 shadow-xl">
-                        <div className="text-center text-blue-400 mb-4 text-xl font-bold">
+                    <div className="bg-gray-900/80 p-5 border border-blue-400/20 shadow-xl">
+                        <div className="text-center mb-4 text-xl font-bold">
                             X vs Y
                         </div>
                         <canvas
                             ref={phaseCanvasRef}
                             width="400"
                             height="400"
-                            className="border-2 border-gray-600 rounded-lg bg-gray-900"
+                            className="border-2 border-gray-600 bg-gray-900"
                         />
                     </div>
 
-                    <div className="bg-gray-900/80 rounded-xl p-5 border border-blue-400/20 shadow-xl">
-                        <div className="text-center text-blue-400 mb-4 text-xl font-bold">
+                    <div className="bg-gray-900/80 p-5 border border-blue-400/20 shadow-xl">
+                        <div className="text-center mb-4 text-xl font-bold">
                             Time Series
                         </div>
                         <canvas
                             ref={timeCanvasRef}
                             width="400"
                             height="400"
-                            className="border-2 border-gray-600 rounded-lg bg-gray-900"
+                            className="border-2 border-gray-600 bg-gray-900"
                         />
                     </div>
                 </div>
 
-                <div className="mt-6 bg-gray-600/40 p-5 rounded-xl border border-blue-400/20">
+                <div className="mt-6 bg-gray-600/40 p-5 border border-gray-400/20">
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
                         <div
-                            className="bg-gray-700/60 p-3 rounded-lg text-center font-mono text-green-400 border border-green-400/20">
+                            className="bg-gray-700 p-3 text-center font-mono">
                             A → X
                         </div>
                         <div
-                            className="bg-gray-700/60 p-3 rounded-lg text-center font-mono text-green-400 border border-green-400/20">
+                            className="bg-gray-700 p-3 text-center font-mono">
                             B + X → Y + D
                         </div>
                         <div
-                            className="bg-gray-700/60 p-3 rounded-lg text-center font-mono text-green-400 border border-green-400/20">
+                            className="bg-gray-700 p-3 text-center font-mono">
                             2X + Y → 3X
                         </div>
                         <div
-                            className="bg-gray-700/60 p-3 rounded-lg text-center font-mono text-green-400 border border-green-400/20">
+                            className="bg-gray-700 p-3 text-center font-mono">
                             X → E
                         </div>
                     </div>
                     <div
-                        className="text-center p-3 bg-blue-400/10 rounded-lg text-blue-400 font-bold border border-blue-400/30">
-                        {status || 'System running - Adjust B concentration to observe oscillation behavior'}
+                        className="text-center p-3 bg-gray-700 font-bold">
+                        {status}
                     </div>
                 </div>
             </div>
